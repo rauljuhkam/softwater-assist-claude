@@ -33,7 +33,10 @@ export function Droplet() {
   return (
     <div
       className="pointer-events-none fixed right-4 z-40 flex flex-col items-end gap-2 sm:right-6"
-      style={{ bottom: "calc(var(--composer-height, 88px) + 12px)" }}
+      style={{
+        bottom:
+          "calc(var(--composer-height, 88px) + var(--footer-height, 28px) + 12px)",
+      }}
     >
       {visibleTip && !muted && (
         <div className="pointer-events-auto w-64 rounded-xl border border-slate-200 bg-white p-3 shadow-lg">

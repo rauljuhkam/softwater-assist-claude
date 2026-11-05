@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+enum ModelOption {
+  GPT4
+  CLAUDE
+  LOCAL_LLAMA
+}
+
+model ChatSession {
+  id          String   @id @default(cuid())
+  title       String   @default("New conversation")
+  model       ModelOption @default(GPT4)
+  personaId   String?
+  persona     SystemPrompt? @relation(fields: [personaId], references: [id], onDelete: SetNull)
+  temperature Float    @default(0.7)
+  topP        Float    @default(0.9)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  messages    Message[]
+
+  @@index([updatedAt])
+}
+
+model Message {
+  id            String      @id @default(cuid())
+  chatSessionId String
+  chatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
+  role          MessageRole
+  content       String
+  attachmentName String?
+  attachmentSize Int?
+  createdAt     DateTime    @default(now())
+
+  @@index([chatSessionId, createdAt])
+}
+
+model SystemPrompt {
+  id          String   @id @default(cuid())
+  slug        String?  @unique
+  name        String
+  description String?
+  promptText  String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chatSessions ChatSession[]
+}

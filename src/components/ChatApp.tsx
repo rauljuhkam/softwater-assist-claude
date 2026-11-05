@@ -230,7 +230,7 @@ export function ChatApp() {
   const effectiveTopP = activeChat?.topP ?? 0.9;
 
   return (
-    <div className="flex h-dvh w-full overflow-hidden bg-white">
+    <div className="flex h-full w-full overflow-hidden bg-white">
       <Sidebar
         chats={chats}
         activeChatId={activeChatId}

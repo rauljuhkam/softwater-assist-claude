@@ -10,3 +10,14 @@ onlyBuiltDependencies:
   - esbuild
   - prisma
   - sharp
+overrides:
+  # Prisma CLI pins deepmerge-ts@7.1.5, which has a known stack-exhaustion
+  # (DoS) advisory. Force the patched release; Prisma only uses it to merge
+  # config objects, so the newer major is safe here.
+  deepmerge-ts: ^8.0.2
+  # Next.js bundles its own postcss; force the patched release (sourceMappingURL
+  # arbitrary-file-read advisories).
+  postcss: ^8.5.32
+  # Nested inside eslint-config-next's typescript-eslint chain (lint-only,
+  # never shipped); force the patched release (DoS via glob amplification).
+  minimatch: ^11.0.1

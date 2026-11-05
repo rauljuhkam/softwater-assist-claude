@@ -4,6 +4,7 @@
 
 :root {
   --background: #ffffff;
+  --composer-height: 96px;
 }
 
 body {

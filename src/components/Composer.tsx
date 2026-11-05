@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Paperclip, Send, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import {
@@ -28,6 +28,23 @@ export function Composer({ onSend, onClearChat, disabled, hasMessages }: Compose
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Publish the composer's live height as a CSS variable so fixed-position
+  // overlays (e.g. the Droplet mascot) can sit above it instead of
+  // overlapping its controls on narrow screens.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(([entry]) => {
+      document.documentElement.style.setProperty(
+        "--composer-height",
+        `${entry.contentRect.height}px`,
+      );
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const trimmed = value.trim();
   const overLimit = value.length > MAX_MESSAGE_LENGTH;
@@ -79,7 +96,7 @@ export function Composer({ onSend, onClearChat, disabled, hasMessages }: Compose
   }
 
   return (
-    <div className="border-t border-slate-200 bg-white px-4 py-3 sm:px-6">
+    <div ref={rootRef} className="border-t border-slate-200 bg-white px-4 py-3 sm:px-6">
       {attachmentError && (
         <p className="mb-2 text-xs text-red-600">{attachmentError}</p>
       )}

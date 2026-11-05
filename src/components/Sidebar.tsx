@@ -83,7 +83,7 @@ function SidebarContent({
                         e.stopPropagation();
                         onDeleteChat(chat.id);
                       }}
-                      className="absolute right-1.5 top-1.5 hidden rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-500 group-hover:block"
+                      className="absolute right-1.5 top-1.5 block rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-500 sm:hidden sm:group-hover:block"
                     >
                       <Trash2 size={14} />
                     </button>
